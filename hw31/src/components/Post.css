@@ -1,0 +1,29 @@
+.post {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 70%;
+  margin: 25px auto;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+.post svg {
+  font-size: 40px;
+  cursor: pointer;
+}
+
+.buttons {
+  max-width: 10%;
+}
+
+.postContent {
+  min-width: 90%;
+}
+
+button {
+  border: none;
+  background-color: white;
+  padding: 20px;
+}
