@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { setPlayerNameAction, setPlayerImageAction } from '../../State/Battle/battle.actions';
 
-const PlayerInput = ({ id, onSubmit, label }) => {
-    const [username, setUsername] = useState();
+const PlayerInput = ({ id, label }) => {
+    const dispatch = useDispatch();
+    const username = useSelector((state) => state.battleReducer[`${id}Name`]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        onSubmit(id, username);
+        dispatch(setPlayerNameAction(id, username));
+        dispatch(setPlayerImageAction(id, `https://github.com/${username}.png?size200`));
     };
 
     return (
@@ -24,7 +26,7 @@ const PlayerInput = ({ id, onSubmit, label }) => {
                 placeholder='Github username'
                 autoComplete='off'
                 value={username}
-                onChange={(event) => setUsername(event.target.value)}
+                onChange={(event) => dispatch(setPlayerNameAction(id, event.target.value))}
             />
             <button
                 className='button'

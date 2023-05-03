@@ -1,29 +1,38 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { battle } from "../api";
-import PlayerPreview from "./PlayerPreview";
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { battle } from '../api';
+import PlayerPreview from './PlayerPreview';
+import {
+    setResultsWinnerAction,
+    setResultsLoserAction,
+    setResultsLoadingAction,
+    setResultsSuccessAction,
+    setResultsFailureAction
+} from '../../State/Results/results.actions';
 
 const Results = () => {
+    const dispatch = useDispatch();
     const location = useLocation();
-    const [winner, setWinner] = useState(null);
-    const [loser, setLoser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+
+    const { winner, loser, loading, error } = useSelector((state) => state.resultsReducer);
 
     useEffect(() => {
+        dispatch(setResultsLoadingAction());
         const params = new URLSearchParams(location.search);
 
-        battle([params.get("playerOneName"), params.get("playerTwoName")])
+        battle([params.get('playerOneName'), params.get('playerTwoName')])
             .then((data) => {
-                setLoading(false);
-                setWinner(data[0]);
-                setLoser(data[1]);
+                dispatch(setResultsWinnerAction(data[0]));
+                dispatch(setResultsLoserAction(data[1]));
+                dispatch(setResultsLoadingAction(false));
+                dispatch(setResultsSuccessAction(data));
             })
             .catch((error) => {
-                setLoading(false);
-                setError(error);
+                dispatch(setResultsLoadingAction(false));
+                dispatch(setResultsFailureAction(error));
             });
-    }, [location.search]);
+    }, [dispatch, location.search]);
 
     if (error) {
         return <h1 className='home-container'>{error}</h1>;

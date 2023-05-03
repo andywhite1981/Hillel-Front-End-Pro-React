@@ -1,30 +1,20 @@
-import PlayerInput from "./PlayerInput";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import PlayerPreview from "./PlayerPreview";
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { setPlayerNameAction, setPlayerImageAction, resetPlayerAction } from '../../State/Battle/battle.actions';
+import PlayerInput from './PlayerInput';
+import PlayerPreview from './PlayerPreview';
 
 const Battle = () => {
-    const [playersData, setPlayersData] = useState({
-        playerOneName: "",
-        playerTwoName: "",
-        playerOneImage: null,
-        playerTwoImage: null
-    });
+    const dispatch = useDispatch();
+    const playersData = useSelector((state) => state.battleReducer);
 
     const handleSubmit = (id, username) => {
-        setPlayersData((prevState) => ({
-            ...prevState,
-            [`${id}Name`]: username,
-            [`${id}Image`]: `https://github.com/${username}.png?size200`
-        }));
+        dispatch(setPlayerNameAction(id, username));
+        dispatch(setPlayerImageAction(id, `https://github.com/${username}.png?size200`));
     };
 
     const handleReset = (id) => {
-        setPlayersData((prevState) => ({
-            ...prevState,
-            [`${id}Name`]: "",
-            [`${id}Image`]: null
-        }));
+        dispatch(resetPlayerAction(id));
     };
 
     return (
@@ -33,7 +23,7 @@ const Battle = () => {
                 {!playersData.playerOneImage ? (
                     <PlayerInput
                         id='playerOne'
-                        label='Payer 1'
+                        label='Player 1'
                         onSubmit={handleSubmit}
                     />
                 ) : (
@@ -42,7 +32,7 @@ const Battle = () => {
                         userName={playersData.playerOneName}>
                         <button
                             className='reset'
-                            onClick={() => handleReset("playerOne")}>
+                            onClick={() => handleReset('playerOne')}>
                             Reset
                         </button>
                     </PlayerPreview>
@@ -50,7 +40,7 @@ const Battle = () => {
                 {!playersData.playerTwoImage ? (
                     <PlayerInput
                         id='playerTwo'
-                        label='Payer 2'
+                        label='Player 2'
                         onSubmit={handleSubmit}
                     />
                 ) : (
@@ -59,7 +49,7 @@ const Battle = () => {
                         userName={playersData.playerTwoName}>
                         <button
                             className='reset'
-                            onClick={() => handleReset("playerTwo")}>
+                            onClick={() => handleReset('playerTwo')}>
                             Reset
                         </button>
                     </PlayerPreview>
@@ -69,7 +59,7 @@ const Battle = () => {
                 <Link
                     className='button'
                     to={{
-                        pathname: "results",
+                        pathname: 'results',
                         search: `?playerOneName=${playersData.playerOneName}&playerTwoName=${playersData.playerTwoName}`
                     }}>
                     Battle

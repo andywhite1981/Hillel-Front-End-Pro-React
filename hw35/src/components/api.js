@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const handleError = (error) => console.error(error);
 
@@ -39,7 +39,7 @@ const getUserData = (player) => {
 const sortPlayers = (players) => players.sort((a, b) => b.score - a.score);
 
 // prettier-ignore
-export const battle = players => {
+export const battle = (players) => {
     return Promise.all(players.map(getUserData))
         .then(sortPlayers)
         .catch(handleError);
