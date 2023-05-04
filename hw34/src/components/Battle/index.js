@@ -1,26 +1,27 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setPlayerNameAction, setPlayerImageAction, resetPlayerAction } from '../../State/Battle/battle.actions';
+import { setPlayerName, setPlayerImage, resetPlayer } from '../../State/Battle/battle.slice';
 import PlayerInput from './PlayerInput';
 import PlayerPreview from './PlayerPreview';
 
 const Battle = () => {
     const dispatch = useDispatch();
-    const playersData = useSelector((state) => state.battleReducer);
+
+    const { playerOneName, playerTwoName, playerOneImage, playerTwoImage } = useSelector((state) => state.battle) || {};
 
     const handleSubmit = (id, username) => {
-        dispatch(setPlayerNameAction(id, username));
-        dispatch(setPlayerImageAction(id, `https://github.com/${username}.png?size200`));
+        dispatch(setPlayerName(id, username));
+        dispatch(setPlayerImage(id, `https://github.com/${username}.png?size200`));
     };
 
     const handleReset = (id) => {
-        dispatch(resetPlayerAction(id));
+        dispatch(resetPlayer({ id }));
     };
 
     return (
         <div>
             <div className='row'>
-                {!playersData.playerOneImage ? (
+                {!playerOneImage ? (
                     <PlayerInput
                         id='playerOne'
                         label='Player 1'
@@ -28,8 +29,8 @@ const Battle = () => {
                     />
                 ) : (
                     <PlayerPreview
-                        avatar={playersData.playerOneImage}
-                        userName={playersData.playerOneName}>
+                        avatar={playerOneImage}
+                        userName={playerOneName}>
                         <button
                             className='reset'
                             onClick={() => handleReset('playerOne')}>
@@ -37,7 +38,7 @@ const Battle = () => {
                         </button>
                     </PlayerPreview>
                 )}
-                {!playersData.playerTwoImage ? (
+                {!playerTwoImage ? (
                     <PlayerInput
                         id='playerTwo'
                         label='Player 2'
@@ -45,8 +46,8 @@ const Battle = () => {
                     />
                 ) : (
                     <PlayerPreview
-                        avatar={playersData.playerTwoImage}
-                        userName={playersData.playerTwoName}>
+                        avatar={playerTwoImage}
+                        userName={playerTwoName}>
                         <button
                             className='reset'
                             onClick={() => handleReset('playerTwo')}>
@@ -55,12 +56,12 @@ const Battle = () => {
                     </PlayerPreview>
                 )}
             </div>
-            {playersData.playerOneImage && playersData.playerTwoImage ? (
+            {playerOneImage && playerTwoImage ? (
                 <Link
                     className='button'
                     to={{
                         pathname: 'results',
-                        search: `?playerOneName=${playersData.playerOneName}&playerTwoName=${playersData.playerTwoName}`
+                        search: `?playerOneName=${playerOneName}&playerTwoName=${playerTwoName}`
                     }}>
                     Battle
                 </Link>
