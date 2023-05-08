@@ -1,37 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { battle } from '../api';
 import PlayerPreview from './PlayerPreview';
-import {
-    setResultsWinnerAction,
-    setResultsLoserAction,
-    setResultsLoadingAction,
-    setResultsSuccessAction,
-    setResultsFailureAction
-} from '../../State/Results/results.actions';
+import { fetchResults } from '../../State/Results/results.slice';
 
 const Results = () => {
-    const dispatch = useDispatch();
     const location = useLocation();
+    const dispatch = useDispatch();
 
-    const { winner, loser, loading, error } = useSelector((state) => state.resultsReducer);
+    const { winner, loser, loading, error } = useSelector((state) => state.results);
 
     useEffect(() => {
-        dispatch(setResultsLoadingAction());
         const params = new URLSearchParams(location.search);
-
-        battle([params.get('playerOneName'), params.get('playerTwoName')])
-            .then((data) => {
-                dispatch(setResultsWinnerAction(data[0]));
-                dispatch(setResultsLoserAction(data[1]));
-                dispatch(setResultsLoadingAction(false));
-                dispatch(setResultsSuccessAction(data));
-            })
-            .catch((error) => {
-                dispatch(setResultsLoadingAction(false));
-                dispatch(setResultsFailureAction(error));
-            });
+        console.log('string');
+        dispatch(fetchResults(params.get('playerOneName'), params.get('playerTwoName')));
     }, [dispatch, location.search]);
 
     if (error) {

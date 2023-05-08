@@ -11,16 +11,16 @@ const battleSlice = createSlice({
     name: 'battle',
     initialState,
     reducers: {
-        setPlayerName: (state, action) => {
-            const { id, name } = action.payload;
+        setPlayerName: (state, { payload }) => {
+            const { id, name } = payload;
             state[`${id}Name`] = name;
         },
-        setPlayerImage: (state, action) => {
-            const { id, image } = action.payload;
+        setPlayerImage: (state, { payload }) => {
+            const { id, image } = payload;
             state[`${id}Image`] = image;
         },
-        resetPlayer: (state, action) => {
-            const { id } = action.payload;
+        resetPlayer: (state, { payload }) => {
+            const { id } = payload;
             state[`${id}Name`] = '';
             state[`${id}Image`] = null;
         }
